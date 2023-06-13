@@ -5,7 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import org.bmsk.mediaexplorer.model.ImageItem
 import org.bmsk.mediaexplorer.model.ListItem
+import org.bmsk.mediaexplorer.model.VideoItem
 import org.bmsk.mediaexplorer.repository.SearchRepository
 
 class SearchViewModel(
@@ -30,6 +32,34 @@ class SearchViewModel(
                 _listLiveData.value = emptyList()
             })
         )
+    }
+
+    fun toggleFavorite(item: ListItem) {
+        _listLiveData.value = _listLiveData.value?.map {
+            if (it == item) {
+                when (it) {
+                    is ImageItem -> {
+                        it.copy(isFavorite = !item.isFavorite)
+                    }
+
+                    is VideoItem -> {
+                        it.copy(isFavorite = !item.isFavorite)
+                    }
+
+                    else -> {
+                        it
+                    }
+                }.also { changedItem ->
+                    if (Common.favoriteList.contains(item)) {
+                        Common.favoriteList.remove(item)
+                    } else {
+                        Common.favoriteList.add(changedItem)
+                    }
+                }
+            } else {
+                it
+            }
+        }
     }
 
     override fun onCleared() {

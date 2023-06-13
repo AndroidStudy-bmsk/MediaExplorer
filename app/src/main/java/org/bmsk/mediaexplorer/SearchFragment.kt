@@ -8,7 +8,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import org.bmsk.mediaexplorer.databinding.FragmentSearchBinding
+import org.bmsk.mediaexplorer.list.ItemHandler
 import org.bmsk.mediaexplorer.list.ListAdapter
+import org.bmsk.mediaexplorer.model.ListItem
 import org.bmsk.mediaexplorer.network.RetrofitManager
 import org.bmsk.mediaexplorer.repository.SearchRepositoryImpl
 
@@ -17,7 +19,8 @@ class SearchFragment : Fragment() {
         SearchViewModel.SearchViewModelFactory(SearchRepositoryImpl(RetrofitManager.searchService))
     }
     private var binding: FragmentSearchBinding? = null
-    private val adapter by lazy { ListAdapter() }
+    private val adapter by lazy { ListAdapter(Handler(viewModel)) }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -59,6 +62,12 @@ class SearchFragment : Fragment() {
                 }
             }
             adapter.submitList(it)
+        }
+    }
+
+    class Handler(private val viewModel: SearchViewModel) : ItemHandler {
+        override fun onClickFavorite(item: ListItem) {
+            viewModel.toggleFavorite(item)
         }
     }
 }
