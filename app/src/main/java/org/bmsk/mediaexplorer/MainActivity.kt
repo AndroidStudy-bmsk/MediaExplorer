@@ -12,6 +12,7 @@ class MainActivity : AppCompatActivity() {
     private val searchFragment = SearchFragment()
     private val fragmentList = listOf(searchFragment, FavoritesFragment())
     private val adapter = ViewPagerAdapter(supportFragmentManager, lifecycle, fragmentList)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
